@@ -1,0 +1,51 @@
+<div class="admin-shell">
+
+  <!-- Topbar móvil -->
+  <div class="mobile-topbar">
+    <img src="https://mutual3deabril.org/wp-content/uploads/LOGO-web-blanco-500x96-1.png" alt="Mutual 3 de Abril"
+      class="mobile-logo" />
+    <button class="hamburger" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Overlay para cerrar el menú en móvil -->
+  @if (menuAbierto) {
+  <div class="overlay" (click)="toggleMenu()"></div>
+  }
+
+  <aside class="sidebar" [class.abierto]="menuAbierto">
+    <div class="sidebar-logo">
+      <img src="https://mutual3deabril.org/wp-content/uploads/LOGO-web-blanco-500x96-1.png" alt="Mutual 3 de Abril"
+        class="logo-img" />
+      <span>Panel administrativo</span>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item" [class.active]="seccionActiva === 'campanas'" (click)="cambiarSeccion('campanas')">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Campañas</span>
+      </div>
+      <div class="nav-item" [class.active]="seccionActiva === 'reportes'" (click)="cambiarSeccion('reportes')">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Reportes</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    @if (seccionActiva === 'campanas') {
+    <app-campanas />
+    }
+    @if (seccionActiva === 'reportes') {
+    <app-reportes-global />
+    }
+  </main>
+
+</div>

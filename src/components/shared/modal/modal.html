@@ -1,0 +1,13 @@
+@if (visible) {
+<div class="overlay" (click)="cerrarModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ titulo }}</h2>
+            <button class="btn-cerrar" (click)="cerrarModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <ng-content />
+        </div>
+    </div>
+</div>
+}

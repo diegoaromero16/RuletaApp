@@ -1,0 +1,30 @@
+<div class="premio-info">
+    <div class="color-dot" [style.background]="premio?.color"></div>
+    <div>
+        <div class="premio-nombre">{{ premio?.nombre }}</div>
+        <div class="premio-stock-actual">Stock actual: {{ premio?.stock_actual }}</div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label>Cantidad a agregar *</label>
+    <input type="number" [(ngModel)]="cantidad" min="1" placeholder="Ej: 10" />
+</div>
+
+<div class="stock-preview">
+    <span class="preview-label">Stock resultante:</span>
+    <span class="preview-valor">{{ stockNuevo }}</span>
+</div>
+
+@if (error) {
+<div class="error-msg">{{ error }}</div>
+}
+
+<div class="form-actions">
+    <button class="btn-cancelar" (click)="cancelar.emit()" [disabled]="guardando">
+        Cancelar
+    </button>
+    <button class="btn-guardar" (click)="guardar()" [disabled]="guardando">
+        {{ guardando ? 'Guardando...' : 'Agregar stock' }}
+    </button>
+</div>

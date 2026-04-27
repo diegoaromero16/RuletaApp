@@ -1,0 +1,108 @@
+@if (cargando) {
+<div class="loading">Cargando reportes...</div>
+}
+
+@if (!cargando) {
+<div class="topbar">
+    <div>
+        <h1>Reportes globales</h1>
+        <p class="subtitle">Todas las campañas · Datos en tiempo real</p>
+    </div>
+    <div class="export-btns">
+        <button class="btn-export excel" (click)="exportarExcel()">Exportar Excel</button>
+        <button class="btn-export pdf" (click)="exportarPDF()">Exportar PDF</button>
+    </div>
+</div>
+
+<div class="content">
+    <div class="metrics">
+        <div class="metric">
+            <div class="label">Sorteos totales</div>
+            <div class="value">{{ totalSorteos }}</div>
+            <div class="sub">Todas las campañas</div>
+        </div>
+        <div class="metric amarillo">
+            <div class="label">Sorteos hoy</div>
+            <div class="value">{{ sorteosHoy }}</div>
+            <div class="sub">En todas las campañas</div>
+        </div>
+        <div class="metric verde">
+            <div class="label">Campañas activas</div>
+            <div class="value">{{ campanasActivas }}</div>
+            <div class="sub">De {{ campanas.length }} totales</div>
+        </div>
+        <div class="metric">
+            <div class="label">Stock total</div>
+            <div class="value">{{ stockTotal }}</div>
+            <div class="sub">Premios restantes</div>
+        </div>
+    </div>
+
+    <div class="highlight-grid">
+        <div class="highlight-card">
+            <div class="label">Campaña más activa</div>
+            <div class="value-text">{{ campanamasActiva }}</div>
+        </div>
+        <div class="highlight-card amarillo">
+            <div class="label">Premio más entregado</div>
+            <div class="value-text">{{ premioMasEntregado }}</div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-card full">
+            <div class="chart-title">Sorteos por campaña</div>
+            <div class="legend">
+                <span class="legend-item">
+                    <span class="legend-dot" style="background:#1B4F8A"></span>Activa
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot" style="background:#aaa"></span>Inactiva
+                </span>
+            </div>
+            @if (datosPorCampana.length === 0) {
+            <div class="empty-chart">Sin datos todavía</div>
+            } @else {
+            <div style="position: relative; height: 200px;">
+                <canvas #chartCampanas role="img" aria-label="Sorteos por campaña">Gráfico de sorteos por
+                    campaña.</canvas>
+            </div>
+            }
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-title">Premio más entregado globalmente</div>
+            @if (datosPorPremio.length === 0) {
+            <div class="empty-chart">Sin datos todavía</div>
+            } @else {
+            <div class="legend">
+                @for (p of datosPorPremio; track p.nombre; let i = $index) {
+                <span class="legend-item">
+                    <span class="legend-dot" [style.background]="getColor(i)"></span>
+                    {{ p.nombre }} {{ p.cantidad }}
+                </span>
+                }
+            </div>
+            <div style="position: relative; height: 180px;">
+                <canvas #chartPremios role="img" aria-label="Premios más entregados">Premios más entregados.</canvas>
+            </div>
+            }
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-title">Resumen por campaña</div>
+            @for (c of datosPorCampana; track c.nombre) {
+            <div class="campana-row">
+                <div class="campana-info">
+                    <span class="campana-nombre">{{ c.nombre }}</span>
+                    <span class="badge" [class.activa]="c.activa" [class.inactiva]="!c.activa">
+                        {{ c.activa ? 'Activa' : 'Inactiva' }}
+                    </span>
+                </div>
+                <span class="campana-sorteos">{{ c.sorteos }} sorteos</span>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+}

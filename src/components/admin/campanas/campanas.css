@@ -1,0 +1,271 @@
+.loading {
+    padding: 40px;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+}
+
+.topbar {
+    background: #fff;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid #e0e0e0;
+}
+
+.topbar h1 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.content {
+    padding: 20px 24px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 0.5px solid #e0e0e0;
+}
+
+.stat-card .label {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card .value {
+    font-size: 26px;
+    font-weight: 500;
+    color: #1B4F8A;
+}
+
+.stat-card.amarillo .value {
+    color: #F5A800;
+}
+
+.stat-card .sub {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 2px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.section-header h2 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #aaa;
+    font-size: 14px;
+    background: #fff;
+    border-radius: 10px;
+    border: 0.5px solid #e0e0e0;
+}
+
+.campana-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 0.5px solid #e0e0e0;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.campana-card:hover {
+    border-color: #1B4F8A;
+}
+
+.campana-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.campana-nombre {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.campana-fecha {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.campana-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.badge.activa {
+    background: #E8F5E9;
+    color: #2E7D32;
+}
+
+.badge.inactiva {
+    background: #F5F5F5;
+    color: #888;
+}
+
+.arrow {
+    color: #ccc;
+    font-size: 18px;
+}
+
+.btn-primary {
+    padding: 9px 16px;
+    background: #1B4F8A;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
+}
+
+.btn-primary:hover {
+    background: #163f6e;
+}
+
+.btn-back {
+    padding: 7px 14px;
+    background: none;
+    border: 0.5px solid #ccc;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.btn-back:hover {
+    border-color: #1B4F8A;
+    color: #1B4F8A;
+}
+
+.btn-editar-campana {
+    padding: 5px 12px;
+    background: none;
+    border: 0.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-editar-campana:hover {
+    border-color: #1B4F8A;
+    color: #1B4F8A;
+}
+
+.btn-eliminar-campana {
+    padding: 5px 12px;
+    background: none;
+    border: 0.5px solid #ffcdd2;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #C62828;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-eliminar-campana:hover {
+    background: #ffebee;
+    border-color: #C62828;
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .export-btns {
+        width: 100%;
+    }
+
+    .btn-export {
+        flex: 1;
+        text-align: center;
+    }
+
+    .tabla-row {
+        grid-template-columns: 1fr 1fr !important;
+        font-size: 12px;
+    }
+
+    .premio-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .premio-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .metrics {
+        grid-template-columns: 1fr;
+    }
+}

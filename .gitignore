@@ -42,3 +42,16 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Credenciales
+src/environments/environment.ts
+src/environments/environment.development.ts
+
+# Dependencias
+node_modules/
+
+# Build
+dist/
+
+# Cache
+.angular/

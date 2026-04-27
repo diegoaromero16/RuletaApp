@@ -1,0 +1,99 @@
+<div class="topbar">
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="btn-back" (click)="volverAtras()">← Volver</button>
+        <div>
+            <h1>{{ campana.nombre }}</h1>
+            <p class="subtitle">
+                {{ campana.fecha_inicio | date:'dd/MM/yyyy' }} —
+                {{ campana.fecha_fin | date:'dd/MM/yyyy' }}
+                ·
+                <span [style.color]="campana.activa ? '#2E7D32' : '#888'">
+                    {{ campana.activa ? 'Activa' : 'Inactiva' }}
+                </span>
+            </p>
+        </div>
+    </div>
+    <button class="btn-primary" (click)="abrirFormPremio()">+ Agregar premio</button>
+</div>
+
+<div class="content">
+
+    <div class="tabs-bar">
+        <div class="tab" [class.active]="tabActiva === 'premios'" (click)="cambiarTab('premios')">
+            Premios y stock
+        </div>
+        <div class="tab" [class.active]="tabActiva === 'reportes'" (click)="cambiarTab('reportes')">
+            Reportes
+        </div>
+        <div class="tab" [class.active]="tabActiva === 'link'" (click)="cambiarTab('link')">
+            Link de ruleta
+        </div>
+    </div>
+
+    @if (cargando) {
+    <div class="loading">Cargando...</div>
+    }
+
+    @if (!cargando && tabActiva === 'premios') {
+    @if (premios.length === 0) {
+    <div class="empty-state">No hay premios en esta campaña todavía.</div>
+    }
+    @for (premio of premios; track premio.id) {
+    <div class="premio-row">
+        <div class="premio-left">
+            <div class="color-dot" [style.background]="premio.color"></div>
+            <div>
+                <div class="premio-nombre">{{ premio.nombre }}</div>
+                <div class="premio-stock">
+                    Stock: {{ premio.stock_actual }} / {{ premio.stock_inicial }}
+                </div>
+                <div class="stock-bar">
+                    <div class="stock-fill" [style.width.%]="porcentajeStock(premio)"
+                        [style.background]="colorBarra(premio)"></div>
+                </div>
+            </div>
+        </div>
+        <div class="premio-actions">
+            <button class="btn-stock" (click)="abrirAgregarStock(premio)">+ Stock</button>
+
+            <app-modal titulo="Agregar stock" [visible]="mostrarAgregarStock" (cerrar)="cerrarAgregarStock()">
+                <app-agregar-stock [premio]="premioSeleccionado" (guardado)="onStockAgregado()"
+                    (cancelar)="cerrarAgregarStock()" />
+            </app-modal>
+
+            <button class="btn-edit" (click)="abrirEditarPremio(premio)">Editar</button>
+            <button class="btn-eliminar" (click)="confirmarEliminarPremio(premio)">Eliminar</button>
+            <app-confirm-dialog [visible]="mostrarConfirm" titulo="Eliminar premio"
+                [mensaje]="'¿Estás seguro que querés eliminar ' + (premioAEliminar?.nombre || '') + '? Esta acción no se puede deshacer.'"
+                textoConfirmar="Sí, eliminar" (confirmar)="ejecutarEliminarPremio()" (cancelar)="cancelarEliminar()" />
+            <span class="badge" [class.activa]="premio.activo" [class.agotado]="!premio.activo">
+                {{ premio.activo ? 'Activo' : 'Agotado' }}
+            </span>
+        </div>
+    </div>
+    }
+    }
+
+    @if (!cargando && tabActiva === 'reportes') {
+    <app-reportes-campana [campana]="campana" />
+    }
+
+    @if (!cargando && tabActiva === 'link') {
+    <div class="link-card">
+        <p class="link-label">Link público de la ruleta para esta campaña</p>
+        <div class="link-url">{{ linkRuleta }}</div>
+        <button class="btn-primary" (click)="copiarLink()">Copiar link</button>
+        <p class="link-hint">
+            Compartí este link con las tablets para que puedan acceder a la ruleta
+        </p>
+    </div>
+    }
+
+    <app-modal [titulo]="premioAEditar ? 'Editar premio' : 'Nuevo premio'" [visible]="mostrarFormPremio"
+        (cerrar)="cerrarFormPremio()">
+        <app-premio-form [campanaId]="campana.id" [premio]="premioAEditar" [colorAuto]="colorSiguiente"
+            (guardado)="onPremioGuardado()" (cancelar)="cerrarFormPremio()" />
+
+    </app-modal>
+
+</div>

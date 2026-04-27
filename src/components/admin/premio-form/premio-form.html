@@ -1,0 +1,55 @@
+<div class="form-group">
+    <label>Nombre del premio *</label>
+    <input type="text" [(ngModel)]="form.nombre" placeholder="Ej: Remera Mutual 3 de Abril" />
+</div>
+
+<div class="form-group">
+    <label>Descripción</label>
+    <textarea [(ngModel)]="form.descripcion" placeholder="Descripción opcional del premio" rows="2"></textarea>
+</div>
+
+@if (!esEdicion) {
+<div class="form-group">
+    <label>Stock inicial *</label>
+    <input type="number" [(ngModel)]="form.stock_inicial" (ngModelChange)="onStockChange()" placeholder="Ej: 20"
+        min="1" />
+</div>
+}
+
+@if (esEdicion) {
+<div class="stock-info">
+    <span class="stock-info-label">Stock actual</span>
+    <span class="stock-info-valor">{{ form.stock_actual }} / {{ form.stock_inicial }}</span>
+    <span class="stock-info-hint">Para modificar el stock usá el botón + Stock</span>
+</div>
+}
+
+<div class="form-group">
+    <label>Color en la ruleta</label>
+    <div class="color-preview">
+        <div class="color-dot" [style.background]="form.color" style="width:20px;height:20px;border:1px solid #ddd">
+        </div>
+        <span>{{ coloresDisponibles | colorLabel:form.color }}</span>
+    </div>
+    <p class="color-hint">El color se asigna automáticamente para mantener la alternancia.</p>
+</div>
+
+<div class="form-group">
+    <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="form.activo" />
+        Premio activo
+    </label>
+</div>
+
+@if (error) {
+<div class="error-msg">{{ error }}</div>
+}
+
+<div class="form-actions">
+    <button class="btn-cancelar" (click)="cancelar.emit()" [disabled]="guardando">
+        Cancelar
+    </button>
+    <button class="btn-guardar" (click)="guardar()" [disabled]="guardando">
+        {{ guardando ? 'Guardando...' : esEdicion ? 'Guardar cambios' : 'Guardar premio' }}
+    </button>
+</div>

@@ -1,0 +1,31 @@
+<div class="login-wrapper">
+    <div class="login-card">
+        <div class="login-logo">
+            <img src="https://mutual3deabril.org/wp-content/uploads/logo.png" alt="Mutual 3 de Abril"
+                class="logo-img" />
+            <h2>Panel Administrativo</h2>
+        </div>
+        <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" placeholder="admin@mutual3deabril.org" [(ngModel)]="email" [disabled]="cargando" />
+        </div>
+        <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" placeholder="••••••••" [(ngModel)]="password" [disabled]="cargando" />
+        </div>
+
+        @if (error) {
+        <div class="error-msg">{{ error }}</div>
+        }
+
+        <button class="btn-login" (click)="login()" [disabled]="cargando || !email || !password">
+            @if (cargando) {
+            Ingresando...
+            } @else {
+            Ingresar
+            }
+        </button>
+
+        <p class="login-footer">Acceso restringido a administradores</p>
+    </div>
+</div>

@@ -1,0 +1,150 @@
+@if (cargando) {
+<div class="loading">Cargando reportes...</div>
+}
+
+@if (!cargando) {
+<div class="reportes-header">
+    <div>
+        <p class="sub">Datos actualizados en tiempo real</p>
+    </div>
+    <div class="export-btns">
+        <button class="btn-export excel" (click)="exportarExcel()">
+            Exportar Excel
+        </button>
+        <button class="btn-export pdf" (click)="exportarPDF()">
+            Exportar PDF
+        </button>
+    </div>
+</div>
+
+<div class="metrics">
+    <div class="metric">
+        <div class="label">Sorteos totales</div>
+        <div class="value">{{ totalSorteos }}</div>
+        <div class="sub">En esta campaña</div>
+    </div>
+    <div class="metric amarillo">
+        <div class="label">Sorteos hoy</div>
+        <div class="value">{{ sorteosHoy }}</div>
+        <div class="sub">{{ today }}</div>
+    </div>
+    <div class="metric verde">
+        <div class="label">Stock restante</div>
+        <div class="value">{{ stockRestante }}</div>
+        <div class="sub">Premios disponibles</div>
+    </div>
+    <div class="metric rojo">
+        <div class="label">Premios agotados</div>
+        <div class="value">{{ premiosAgotados }}</div>
+        <div class="sub">De {{ premios.length }} premios totales</div>
+    </div>
+</div>
+
+<div class="charts-grid">
+    <div class="chart-card full">
+        <div class="chart-title">Sorteos por día</div>
+        @if (sorteosPorDia.length === 0) {
+        <div class="empty-chart">Sin datos todavía</div>
+        } @else {
+        <div style="position: relative; height: 200px;">
+            <canvas #chartDias role="img" aria-label="Sorteos por día">Gráfico de sorteos por día.</canvas>
+        </div>
+        }
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-title">Distribución de premios</div>
+        @if (sorteosPorPremio.length === 0) {
+        <div class="empty-chart">Sin datos todavía</div>
+        } @else {
+        <div class="legend">
+            @for (p of sorteosPorPremio; track p.id; let i = $index) {
+            <span class="legend-item">
+                <span class="legend-dot" [style.background]="getColor(i)"></span>
+                {{ p.nombre }} {{ p.cantidad }}
+            </span>
+            }
+        </div>
+        <div style="position: relative; height: 180px;">
+            <canvas #chartPremios role="img" aria-label="Distribución de premios">Distribución de premios.</canvas>
+        </div>
+        }
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-title">Stock restante por premio</div>
+        @for (premio of premios; track premio.id) {
+        <div class="stock-item">
+            <div class="stock-row">
+                <span class="stock-nombre">
+                    <span class="premio-dot" [style.background]="premio.color"></span>
+                    {{ premio.nombre }}
+                </span>
+                <span class="stock-valor" [style.color]="colorStock(premio)">
+                    {{ premio.stock_actual }}/{{ premio.stock_inicial }}
+                </span>
+            </div>
+            <div class="barra-wrap">
+                <div class="barra-fill" [style.width.%]="porcentaje(premio)" [style.background]="colorStock(premio)">
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<div class="tabla-card">
+    <div class="tabla-header">
+        <h3>Resumen por premio</h3>
+    </div>
+    <div class="tabla-row header">
+        <span>Premio</span>
+        <span>Entregados</span>
+        <span>% del total</span>
+        <span>Stock restante</span>
+    </div>
+    @for (p of sorteosPorPremio; track p.id) {
+    <div class="tabla-row">
+        <span>
+            <span class="premio-dot" [style.background]="getPremioColor(p.id)"></span>
+            {{ p.nombre }}
+        </span>
+        <span class="valor-azul">{{ p.cantidad }}</span>
+        <span class="valor-gris">
+            {{ totalSorteos > 0 ? (p.cantidad / totalSorteos * 100 | number:'1.0-0') + '%' : '0%' }}
+        </span>
+        <span>
+            <span [class]="getPremioStock(p.id) === 0 ? 'badge-agotado' : 'badge-stock'">
+                {{ getPremioStock(p.id) === 0 ? 'Agotado' : getPremioStock(p.id) }}
+            </span>
+        </span>
+    </div>
+    }
+</div>
+
+<div class="tabla-card">
+    <div class="tabla-header">
+        <h3>Últimos sorteos</h3>
+    </div>
+    <div class="tabla-row header" style="grid-template-columns: 2fr 2fr 1fr">
+        <span>Premio</span>
+        <span>Fecha y hora</span>
+        <span>Estado</span>
+    </div>
+    @if (sorteos.length === 0) {
+    <div class="empty-state">No hay sorteos registrados todavía.</div>
+    }
+    @for (s of sorteos.slice(0, 20); track s.id) {
+    <div class="tabla-row" style="grid-template-columns: 2fr 2fr 1fr">
+        <span>
+            <span class="premio-dot" [style.background]="getPremioColor(s.premio_id)"></span>
+            {{ s.premios?.nombre || '-' }}
+        </span>
+        <span class="valor-gris">
+            {{ s.fecha | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+        <span><span class="badge-entregado">Entregado</span></span>
+    </div>
+    }
+</div>
+}

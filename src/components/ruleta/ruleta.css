@@ -1,0 +1,234 @@
+.ruleta-page {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #1B4F8A 0%, #0d3060 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.loading {
+    text-align: center;
+    color: #fff;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #F5A800;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-page {
+    text-align: center;
+    color: #fff;
+}
+
+.error-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.error-page h2 {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.error-page p {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.ruleta-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.ruleta-header {
+    text-align: center;
+    color: #fff;
+}
+
+.logo-badge {
+    display: inline-block;
+    background: #F5A800;
+    color: #1B4F8A;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.ruleta-header h1 {
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.ruleta-header p {
+    font-size: 14px;
+    opacity: 0.75;
+}
+
+.canvas-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+.pointer {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 28px solid #F5A800;
+    z-index: 10;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+canvas {
+    border-radius: 50%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    display: block;
+}
+
+.center-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #1B4F8A;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    color: #1B4F8A;
+    transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.center-btn:hover:not(:disabled) {
+    background: #F5A800;
+    color: #fff;
+    border-color: #F5A800;
+}
+
+.center-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.hint {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    text-align: center;
+}
+
+.resultado-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 24px;
+}
+
+.resultado-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    width: 100%;
+    max-width: 340px;
+    animation: aparecer 0.3s ease;
+}
+
+@keyframes aparecer {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.resultado-emoji {
+    font-size: 52px;
+    margin-bottom: 12px;
+}
+
+.resultado-card h2 {
+    font-size: 22px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+}
+
+.resultado-sub {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 12px;
+}
+
+.premio-nombre {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.premio-desc {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.btn-cerrar-resultado {
+    width: 100%;
+    padding: 12px;
+    background: #1B4F8A;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-cerrar-resultado:hover {
+    background: #163f6e;
+}
+
+.logo-ruleta {
+    width: 180px;
+    height: auto;
+    display: block;
+    margin: 0 auto 12px;
+}

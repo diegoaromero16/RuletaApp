@@ -1,0 +1,71 @@
+<div class="ruleta-page">
+
+    @if (cargando) {
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Cargando ruleta...</p>
+    </div>
+    }
+
+    @if (!cargando && !campana) {
+    <div class="error-page">
+        <div class="error-icon">!</div>
+        <h2>Campaña no encontrada</h2>
+        <p>Esta ruleta no existe o la campaña no está activa.</p>
+    </div>
+    }
+
+    @if (!cargando && campana && sinPremios) {
+    <div class="error-page">
+        <div class="error-icon">🎉</div>
+        <h2>¡Premios agotados!</h2>
+        <p>Todos los premios de esta campaña han sido entregados.</p>
+    </div>
+    }
+
+    @if (!cargando && campana && !sinPremios) {
+    <div class="ruleta-wrapper">
+        <div class="ruleta-header">
+            <img src="https://mutual3deabril.org/wp-content/uploads/LOGO-web-blanco-500x96-1.png"
+                alt="Mutual 3 de Abril" class="logo-ruleta" />
+            <h1>Ruleta de Premios</h1>
+            <p>{{ campana.nombre }}</p>
+        </div>
+
+        <div class="canvas-container">
+            <div class="pointer"></div>
+            <canvas #canvas width="400" height="400"></canvas>
+            <button class="center-btn" (click)="girar()" [disabled]="girando">
+                @if (girando) { ... }
+                @else { GIRAR }
+            </button>
+        </div>
+
+        <p class="hint">
+            @if (girando) { Girando... }
+            @else { Tocá el botón para girar }
+        </p>
+
+    </div>
+    }
+
+    @if (mostrarResultado && premioGanado) {
+    <div class="resultado-overlay" (click)="cerrarResultado()">
+        <div class="resultado-card" (click)="$event.stopPropagation()">
+            <div class="resultado-emoji">🎉</div>
+            <h2>¡Felicitaciones!</h2>
+            <p class="resultado-sub">Ganaste:</p>
+            <div class="premio-nombre" [style.color]="premioGanado.color">
+                {{ premioGanado.nombre }}
+            </div>
+            @if (premioGanado.descripcion) {
+            <p class="premio-desc">{{ premioGanado.descripcion }}</p>
+            }
+            <button class="btn-cerrar-resultado" (click)="cerrarResultado()">
+                ¡Genial!
+            </button>
+        </div>
+    </div>
+    }
+
+</div>

@@ -1,0 +1,75 @@
+@if (cargando) {
+<div class="loading">Cargando campañas...</div>
+}
+
+@if (!cargando && !campanaSeleccionada) {
+<div class="topbar">
+    <div>
+        <h1>Campañas</h1>
+        <p class="subtitle">Gestioná todas las campañas activas e inactivas</p>
+    </div>
+    <button class="btn-primary" (click)="abrirFormulario()">+ Nueva campaña</button>
+</div>
+
+<div class="content">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="label">Campañas activas</div>
+            <div class="value">{{ campanasActivas }}</div>
+            <div class="sub">En este momento</div>
+        </div>
+        <div class="stat-card amarillo">
+            <div class="label">Total campañas</div>
+            <div class="value">{{ campanas.length }}</div>
+            <div class="sub">Históricas y activas</div>
+        </div>
+    </div>
+
+    <div class="section-header">
+        <h2>Todas las campañas</h2>
+    </div>
+
+    @if (campanas.length === 0) {
+    <div class="empty-state">No hay campañas creadas todavía.</div>
+    }
+
+    @for (campana of campanas; track campana.id) {
+    <div class="campana-card">
+        <div class="campana-header" (click)="seleccionarCampana(campana)">
+            <div>
+                <div class="campana-nombre">{{ campana.nombre }}</div>
+                <div class="campana-fecha">
+                    {{ campana.fecha_inicio | date:'dd/MM/yyyy' }} —
+                    {{ campana.fecha_fin | date:'dd/MM/yyyy' }}
+                </div>
+            </div>
+            <div class="campana-right">
+                <span class="badge" [class.activa]="campana.activa" [class.inactiva]="!campana.activa">
+                    {{ campana.activa ? 'Activa' : 'Inactiva' }}
+                </span>
+                <button class="btn-editar-campana" (click)="$event.stopPropagation(); abrirEditarCampana(campana)">
+                    Editar
+                </button>
+                <button class="btn-eliminar-campana" (click)="$event.stopPropagation(); confirmarEliminar(campana)">
+                    Eliminar
+                </button>
+
+                <app-confirm-dialog [visible]="mostrarConfirm" titulo="Eliminar campaña"
+                    [mensaje]="'¿Estás seguro que querés eliminar ' + (campanaAEliminar?.nombre || '') + '? Esto eliminará también todos sus premios y sorteos.'"
+                    textoConfirmar="Sí, eliminar" (confirmar)="ejecutarEliminar()" (cancelar)="cancelarEliminar()" />
+                <span class="arrow">›</span>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+}
+
+@if (!cargando && campanaSeleccionada) {
+<app-campana-detalle [campana]="campanaSeleccionada" (volver)="volver()" />
+}
+
+<app-modal [titulo]="campanaAEditar ? 'Editar campaña' : 'Nueva campaña'" [visible]="mostrarFormulario"
+    (cerrar)="cerrarFormulario()">
+    <app-campana-form [campana]="campanaAEditar" (guardado)="onCampanaGuardada()" (cancelar)="cerrarFormulario()" />
+</app-modal>

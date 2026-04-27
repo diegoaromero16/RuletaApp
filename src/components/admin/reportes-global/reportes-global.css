@@ -1,0 +1,279 @@
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #888;
+    font-size: 14px;
+}
+
+.topbar {
+    background: #fff;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid #e0e0e0;
+}
+
+.topbar h1 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.export-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-export {
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0.5px solid #e0e0e0;
+    background: #fff;
+    transition: all 0.15s;
+}
+
+.btn-export.excel {
+    border-color: #2E7D32;
+    color: #2E7D32;
+}
+
+.btn-export.excel:hover {
+    background: #E8F5E9;
+}
+
+.btn-export.pdf {
+    border-color: #C62828;
+    color: #C62828;
+}
+
+.btn-export.pdf:hover {
+    background: #FFEBEE;
+}
+
+.content {
+    padding: 20px 24px;
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.metric {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 0.5px solid #e0e0e0;
+}
+
+.metric .label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.metric .value {
+    font-size: 26px;
+    font-weight: 500;
+    color: #1B4F8A;
+}
+
+.metric .sub {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 3px;
+}
+
+.metric.amarillo .value {
+    color: #F5A800;
+}
+
+.metric.verde .value {
+    color: #2E7D32;
+}
+
+.highlight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.highlight-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 0.5px solid #e0e0e0;
+    border-left: 3px solid #1B4F8A;
+}
+
+.highlight-card.amarillo {
+    border-left-color: #F5A800;
+}
+
+.highlight-card .label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.highlight-card .value-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.chart-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 0.5px solid #e0e0e0;
+    padding: 16px;
+}
+
+.chart-card.full {
+    grid-column: 1 / -1;
+}
+
+.chart-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+}
+
+.empty-chart {
+    text-align: center;
+    padding: 40px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.campana-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 0.5px solid #f0f0f0;
+    font-size: 13px;
+}
+
+.campana-row:last-child {
+    border-bottom: none;
+}
+
+.campana-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.campana-nombre {
+    color: #1a1a1a;
+    font-weight: 500;
+}
+
+.campana-sorteos {
+    color: #1B4F8A;
+    font-weight: 500;
+}
+
+.badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.badge.activa {
+    background: #E8F5E9;
+    color: #2E7D32;
+}
+
+.badge.inactiva {
+    background: #F5F5F5;
+    color: #888;
+}
+
+@media (max-width: 768px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card.full {
+        grid-column: 1;
+    }
+
+    .metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .highlight-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .export-btns {
+        width: 100%;
+        display: flex;
+    }
+
+    .btn-export {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .metrics {
+        grid-template-columns: 1fr;
+    }
+}
