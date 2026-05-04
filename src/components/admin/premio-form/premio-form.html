@@ -26,12 +26,23 @@
 
 <div class="form-group">
     <label>Color en la ruleta</label>
-    <div class="color-preview">
-        <div class="color-dot" [style.background]="form.color" style="width:20px;height:20px;border:1px solid #ddd">
-        </div>
-        <span>{{ coloresDisponibles | colorLabel:form.color }}</span>
+    <div class="colores-grid">
+        @for (c of coloresDisponibles; track c.valor) {
+            <button type="button"
+                    class="color-opcion"
+                    [class.seleccionado]="form.color === c.valor"
+                    [style.background]="c.valor"
+                    [title]="c.label"
+                    (click)="form.color = c.valor">
+            </button>
+        }
+        <label class="color-opcion color-custom"
+               [class.seleccionado]="!esColorPredefinido()"
+               [style.background]="esColorPredefinido() ? null : form.color"
+               title="Color personalizado">
+            <input type="color" name="colorCustom" [(ngModel)]="form.color" class="input-color-nativo" />
+        </label>
     </div>
-    <p class="color-hint">El color se asigna automáticamente para mantener la alternancia.</p>
 </div>
 
 <div class="form-group">

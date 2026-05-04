@@ -2,12 +2,10 @@ import { Component, Input, Output, EventEmitter, ChangeDetectorRef, OnInit, OnCh
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../../services/supabase.service';
-import { ColorLabelPipe } from '../../../pipes/color-label-pipe';
-
 @Component({
   selector: 'app-premio-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ColorLabelPipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './premio-form.html',
   styleUrl: './premio-form.css'
 })
@@ -85,6 +83,10 @@ export class PremioFormComponent implements OnInit, OnChanges {
       };
     }
     this.cdr.detectChanges();
+  }
+
+  esColorPredefinido(): boolean {
+    return this.coloresDisponibles.some(c => c.valor === this.form.color);
   }
 
   onStockChange() {

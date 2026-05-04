@@ -43,7 +43,9 @@
     border-radius: 50%;
     cursor: pointer;
     border: 3px solid transparent;
+    box-shadow: 0 0 0 1px #ccc;
     transition: transform 0.15s, border-color 0.15s;
+    padding: 0;
 }
 
 .color-opcion:hover {
@@ -52,7 +54,26 @@
 
 .color-opcion.seleccionado {
     border-color: #1a1a1a;
+    box-shadow: 0 0 0 1px #1a1a1a;
     transform: scale(1.15);
+}
+
+.color-custom {
+    background-image: conic-gradient(red, orange, yellow, green, blue, violet, red);
+    position: relative;
+    overflow: hidden;
+    display: block;
+}
+
+.input-color-nativo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    padding: 0;
 }
 
 .color-preview {

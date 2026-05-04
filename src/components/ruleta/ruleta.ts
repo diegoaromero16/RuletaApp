@@ -79,10 +79,10 @@ export class Ruleta implements OnDestroy, AfterViewInit {
         .select('*')
         .eq('campana_id', this.campanaId)
         .eq('activo', true)
-        .gt('stock_actual', 0);
+        .order('created_at', { ascending: true });
 
       this.premios = premios || [];
-      this.sinPremios = this.premios.length === 0;
+      this.sinPremios = !this.premios.some(p => p.stock_actual > 0);
 
     } catch (e) {
       console.log('error:', e);
@@ -92,6 +92,9 @@ export class Ruleta implements OnDestroy, AfterViewInit {
       if (this.premios.length > 0) {
         setTimeout(() => {
           if (this.canvasRef?.nativeElement) {
+            const size = this.calcularTamanoCanvas();
+            this.canvasRef.nativeElement.width = size;
+            this.canvasRef.nativeElement.height = size;
             this.dibujarRuleta(0);
           }
         }, 300);
@@ -103,19 +106,20 @@ export class Ruleta implements OnDestroy, AfterViewInit {
     this.realtimeChannel = this.supabase.suscribirPremios(
       this.campanaId,
       async (payload: any) => {
-        // Recarga los premios activos
+        // Evita interferir con la animación o el resultado mostrado
+        if (this.girando || this.mostrarResultado) return;
+
         const { data } = await this.supabase.client
           .from('premios')
           .select('*')
           .eq('campana_id', this.campanaId)
           .eq('activo', true)
-          .gt('stock_actual', 0);
+          .order('created_at', { ascending: true });
 
         this.premios = data || [];
-        this.sinPremios = this.premios.length === 0;
+        this.sinPremios = !this.premios.some(p => p.stock_actual > 0);
         this.cdr.detectChanges();
 
-        // Redibuja la ruleta con los premios actualizados
         if (this.premios.length > 0) {
           setTimeout(() => this.dibujarRuleta(0), 100);
         }
@@ -123,12 +127,21 @@ export class Ruleta implements OnDestroy, AfterViewInit {
     );
   }
 
+  private calcularTamanoCanvas(): number {
+    const vw = window.innerWidth;
+    if (vw >= 1024 && vw <= 1280) return 680;
+    if (vw >= 768 && vw < 1024) return 560;
+    return 400;
+  }
+
   dibujarRuleta(anguloActual: number) {
     const canvas = this.canvasRef.nativeElement;
     const ctx = canvas.getContext('2d')!;
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
+    const escala = canvas.width / 400;
     const r = cx - 4;
+    const radioBase = Math.round(36 * escala);
     const n = this.premios.length;
     const arco = (2 * Math.PI) / n;
 
@@ -145,24 +158,22 @@ export class Ruleta implements OnDestroy, AfterViewInit {
       ctx.fillStyle = premio.color || '#1B4F8A';
       ctx.fill();
       ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2 * escala;
       ctx.stroke();
 
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(inicio + arco / 2);
 
-      // Centro real del segmento entre el circulo central (36px) y el borde
-      const distanciaTexto = 36 + (r - 36) / 2;
+      const distanciaTexto = radioBase + (r - radioBase) / 2;
 
-      ctx.font = '500 20px Arial';
+      ctx.font = `500 ${Math.round(20 * escala)}px Arial`;
       ctx.fillStyle = premio.color === '#FFFFFF' ? '#1B4F8A' : '#fff';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.shadowColor = 'rgba(0,0,0,0.4)';
       ctx.shadowBlur = 3;
 
-      // Dividir el texto en palabras y armar líneas
       const palabras = premio.nombre.split(' ');
       const lineas: string[] = [];
       let lineaActual = '';
@@ -178,8 +189,7 @@ export class Ruleta implements OnDestroy, AfterViewInit {
       });
       if (lineaActual) lineas.push(lineaActual);
 
-      // Dibujar cada línea centrada
-      const alturaLinea = 16;
+      const alturaLinea = Math.round(16 * escala);
       const offsetInicial = -((lineas.length - 1) * alturaLinea) / 2;
 
       lineas.forEach((linea, idx) => {
@@ -190,16 +200,16 @@ export class Ruleta implements OnDestroy, AfterViewInit {
     });
 
     ctx.beginPath();
-    ctx.arc(cx, cy, 36, 0, 2 * Math.PI);
+    ctx.arc(cx, cy, radioBase, 0, 2 * Math.PI);
     ctx.fillStyle = '#fff';
     ctx.fill();
     ctx.strokeStyle = '#1B4F8A';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 3 * escala;
     ctx.stroke();
   }
 
   async girar() {
-    if (this.girando || this.premios.length === 0) return;
+    if (this.girando || !this.premios.some(p => p.stock_actual > 0)) return;
 
     this.girando = true;
     this.mostrarResultado = false;
@@ -252,7 +262,6 @@ export class Ruleta implements OnDestroy, AfterViewInit {
       if (progreso < 1) {
         requestAnimationFrame(animar);
       } else {
-        // Usá directamente el resultado de Supabase para mostrar el premio
         this.premioGanado = {
           nombre: resultado.nombre,
           descripcion: resultado.descripcion,
@@ -262,31 +271,30 @@ export class Ruleta implements OnDestroy, AfterViewInit {
         this.mostrarResultado = true;
         this.girando = false;
         this.cdr.detectChanges();
-
-        // Recargá los premios activos
-        this.supabase.client
-          .from('premios')
-          .select('*')
-          .eq('campana_id', this.campanaId)
-          .eq('activo', true)
-          .gt('stock_actual', 0)
-          .then(({ data }) => {
-            this.premios = data || [];
-            this.sinPremios = this.premios.length === 0;
-            this.cdr.detectChanges();
-            if (this.premios.length > 0) {
-              this.dibujarRuleta(this.angulo % (2 * Math.PI));
-            }
-          });
       }
     };
 
     requestAnimationFrame(animar);
   }
 
-  cerrarResultado() {
+  async cerrarResultado() {
     this.mostrarResultado = false;
     this.premioGanado = null;
+    this.angulo = 0;
+
+    const { data } = await this.supabase.client
+      .from('premios')
+      .select('*')
+      .eq('campana_id', this.campanaId)
+      .eq('activo', true)
+      .order('created_at', { ascending: true });
+
+    this.premios = data || [];
+    this.sinPremios = !this.premios.some(p => p.stock_actual > 0);
     this.cdr.detectChanges();
+
+    if (this.premios.length > 0) {
+      setTimeout(() => this.dibujarRuleta(0), 50);
+    }
   }
 }
