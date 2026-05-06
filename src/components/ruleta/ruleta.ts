@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
@@ -74,15 +74,15 @@ export class Ruleta implements OnDestroy, AfterViewInit {
 
       this.campana = campana;
 
+      // Traemos TODOS los premios sin filtrar por stock ni activo
       const { data: premios } = await this.supabase.client
         .from('premios')
         .select('*')
         .eq('campana_id', this.campanaId)
-        .eq('activo', true)
         .order('created_at', { ascending: true });
 
       this.premios = premios || [];
-      this.sinPremios = !this.premios.some(p => p.stock_actual > 0);
+      this.sinPremios = this.premios.filter(p => p.stock_actual > 0).length === 0;
 
     } catch (e) {
       console.log('error:', e);
@@ -106,18 +106,17 @@ export class Ruleta implements OnDestroy, AfterViewInit {
     this.realtimeChannel = this.supabase.suscribirPremios(
       this.campanaId,
       async (payload: any) => {
-        // Evita interferir con la animación o el resultado mostrado
         if (this.girando || this.mostrarResultado) return;
 
+        // Traemos TODOS los premios sin filtrar
         const { data } = await this.supabase.client
           .from('premios')
           .select('*')
           .eq('campana_id', this.campanaId)
-          .eq('activo', true)
           .order('created_at', { ascending: true });
 
         this.premios = data || [];
-        this.sinPremios = !this.premios.some(p => p.stock_actual > 0);
+        this.sinPremios = this.premios.filter(p => p.stock_actual > 0).length === 0;
         this.cdr.detectChanges();
 
         if (this.premios.length > 0) {
@@ -209,7 +208,7 @@ export class Ruleta implements OnDestroy, AfterViewInit {
   }
 
   async girar() {
-    if (this.girando || !this.premios.some(p => p.stock_actual > 0)) return;
+    if (this.girando || this.premios.filter(p => p.stock_actual > 0).length === 0) return;
 
     this.girando = true;
     this.mostrarResultado = false;
@@ -228,7 +227,6 @@ export class Ruleta implements OnDestroy, AfterViewInit {
       return;
     }
 
-    // Buscá el premio ganador en la lista actual por ID
     const premioIndex = this.premios.findIndex(p => p.id === resultado.premio_id);
 
     if (premioIndex === -1) {
@@ -241,7 +239,6 @@ export class Ruleta implements OnDestroy, AfterViewInit {
     const n = this.premios.length;
     const arco = (2 * Math.PI) / n;
 
-    // Calculá cuánto tiene que girar para que el puntero apunte al premio ganador
     const anguloSegmento = premioIndex * arco + arco / 2;
     const anguloObjetivo = 2 * Math.PI - anguloSegmento - (Math.PI / 2);
     const vueltas = 2 * Math.PI * 8;
@@ -282,15 +279,15 @@ export class Ruleta implements OnDestroy, AfterViewInit {
     this.premioGanado = null;
     this.angulo = 0;
 
+    // Traemos TODOS los premios sin filtrar
     const { data } = await this.supabase.client
       .from('premios')
       .select('*')
       .eq('campana_id', this.campanaId)
-      .eq('activo', true)
       .order('created_at', { ascending: true });
 
     this.premios = data || [];
-    this.sinPremios = !this.premios.some(p => p.stock_actual > 0);
+    this.sinPremios = this.premios.filter(p => p.stock_actual > 0).length === 0;
     this.cdr.detectChanges();
 
     if (this.premios.length > 0) {
