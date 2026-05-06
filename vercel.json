@@ -1,0 +1,10 @@
+{
+    "buildCommand": "ng build",
+    "outputDirectory": "dist/Ruleta-App/browser",
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
