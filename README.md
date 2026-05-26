@@ -1,59 +1,119 @@
-# RuletaApp
+# Ruleta App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+An interactive lottery wheel application built for **Mutual 3 de Abril**. Administrators can create campaigns, configure prizes with stock control, and run real-time raffles through an animated spinning wheel. The public-facing wheel lets participants spin and instantly see their result, while authenticated admins manage everything from a dashboard.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- Animated canvas-based spinning wheel
+- Campaign and prize management (CRUD)
+- Real-time stock updates via Supabase Realtime
+- Per-campaign and global reporting with PDF and Excel export
+- Email/password authentication with route guards
+- Multi-tablet support (simultaneous draws on different devices)
 
-```bash
-ng serve
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Angular 21 (standalone components, signals) |
+| Language | TypeScript 5.9 |
+| UI | Angular Material 21 |
+| Backend / DB | Supabase (PostgreSQL + Auth + Realtime + RPC) |
+| Charts | Chart.js 4 |
+| PDF export | jsPDF + jspdf-autotable |
+| Excel export | SheetJS (xlsx) |
+| Testing | Vitest + jsdom |
+| Deployment | Vercel |
+
+## Project Structure
+
+```
+src/
+├── app/                   # Root component, routes, config
+├── components/
+│   ├── login/             # Login page
+│   ├── ruleta/            # Public spinning wheel
+│   ├── admin/             # Admin dashboard shell
+│   │   ├── campanas/      # Campaign list
+│   │   ├── campana-form/  # Create / edit campaign
+│   │   ├── campana-detalle/
+│   │   ├── premio-form/   # Create / edit prize
+│   │   ├── agregar-stock/
+│   │   ├── reportes-global/
+│   │   └── reportes-campana/
+│   └── shared/            # Modal, confirm dialog
+├── services/
+│   └── supabase.service.ts
+├── guards/
+│   └── auth-guard.ts
+└── environments/
+    ├── environment.ts              # Production (committed)
+    └── environment.development.ts  # Local dev (gitignored)
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Routes
 
-## Code scaffolding
+| Path | Access | Description |
+|---|---|---|
+| `/login` | Public | Admin login |
+| `/admin` | Auth required | Dashboard |
+| `/ruleta/:id` | Public | Spinning wheel for a campaign |
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Getting Started
 
-```bash
-ng generate component component-name
-```
+### Prerequisites
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Node.js 18+
+- npm 8+
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### Install dependencies
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Environment setup
 
-## Running unit tests
+The production environment file (`src/environments/environment.ts`) is committed with the public Supabase URL and anon key. For local development, create `src/environments/environment.development.ts` with the same shape:
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+```ts
+export const environment = {
+  production: false,
+  supabaseUrl: 'YOUR_SUPABASE_URL',
+  supabaseKey: 'YOUR_SUPABASE_ANON_KEY',
+};
+```
+
+> This file is gitignored to avoid leaking credentials.
+
+### Run the dev server
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Open [http://localhost:4200](http://localhost:4200). The app reloads automatically on file changes.
 
-For end-to-end (e2e) testing, run:
+### Build for production
 
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Output goes to `dist/Ruleta-App/browser/`.
 
-## Additional Resources
+### Run tests
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm test
+```
+
+## Deployment
+
+The app is configured for Vercel via `vercel.json`:
+
+- **Build command:** `ng build`
+- **Output directory:** `dist/Ruleta-App/browser`
+- SPA rewrites are set up so all routes resolve to `index.html`
+
+Connect the repository to a Vercel project and it deploys automatically on every push to `main`.
